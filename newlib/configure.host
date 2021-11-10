@@ -577,6 +577,14 @@ case "${host}" in
   microblaze*-*-*)
 	machine_dir=microblaze
 	;;
+  mipsallegrex*psp*)
+	default_newlib_io_c99_formats="yes"
+	default_newlib_io_long_long="yes"
+	default_newlib_io_pos_args="yes"
+	sys_dir=psp
+	syscall_dir=syscalls
+	newlib_cflags="${newlib_cflags} -G0 -mno-explicit-relocs -DCOMPACT_CTYPE -DCLOCK_PROVIDED -DHAVE_FCNTL -DHAVE_RENAME -DMALLOC_ALIGNMENT=16 -I${prefix}/psp/sdk/include -ffunction-sections"
+	;;
   mips*-dec-*)
 	sys_dir=decstation
 	;;
