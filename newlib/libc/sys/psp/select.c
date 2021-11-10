@@ -62,7 +62,7 @@ int	select(int n, fd_set *readfds, fd_set *writefds,
 }
 
 #define SCE_FD_SET(n, p) \
-	((p)->fds_bits[((n) & 0xFF) /__NFDBITS] |= (1 << ((n) % __NFDBITS)))
+	((p)->fds_bits[((n) & 0xFF) /_NFDBITS] |= (1 << ((n) % _NFDBITS)))
 
 static int __psp_poll_select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds)
 {
