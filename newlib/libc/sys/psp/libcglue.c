@@ -60,7 +60,7 @@ extern int __psp_pipe_nonblocking_write(int fd, const void *buf, size_t len);
 
 int __psp_set_errno(int code);
 
-#ifdef F___psp_set_errno
+//#ifdef F___psp_set_errno
 int __psp_set_errno(int code)
 {
 	if ((code & 0x80010000) == 0x80010000) {
@@ -69,9 +69,9 @@ int __psp_set_errno(int code)
 	}
 	return code;
 }
-#endif
+//#endif
 
-#ifdef F_getcwd
+//#ifdef F_getcwd
 char *getcwd(char *buf, size_t size)
 {
 	if(!buf) {
@@ -87,9 +87,9 @@ char *getcwd(char *buf, size_t size)
 	strcpy(buf, __psp_cwd);
 	return buf;
 }
-#endif
+//#endif
 
-#ifdef F_chdir
+//#ifdef F_chdir
 int chdir(const char *path)
 {
 	char dest[MAXPATHLEN + 1];
@@ -113,9 +113,9 @@ int chdir(const char *path)
 	strcpy(__psp_cwd, dest);
 	return 0;
 }
-#endif
+//#endif
 
-#ifdef F_mkdir
+//#ifdef F_mkdir
 int mkdir(const char *pathname, mode_t mode)
 {
 	char dest[MAXPATHLEN + 1];
@@ -127,9 +127,9 @@ int mkdir(const char *pathname, mode_t mode)
 
 	return __psp_set_errno(sceIoMkdir(dest, mode));
 }
-#endif
+//#endif
 
-#ifdef F_rmdir
+//#ifdef F_rmdir
 int rmdir(const char *pathname)
 {
 	char dest[MAXPATHLEN + 1];
@@ -141,9 +141,9 @@ int rmdir(const char *pathname)
 
 	return __psp_set_errno(sceIoRmdir(dest));
 }
-#endif
+//#endif
 
-#ifdef F_realpath
+//#ifdef F_realpath
 char *realpath(const char *path, char *resolved_path)
 {
 	if(!path || !resolved_path) {
@@ -160,10 +160,10 @@ char *realpath(const char *path, char *resolved_path)
 	}
 	return resolved_path;
 }
-#endif
+//#endif
 
 /* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
-#ifdef F__open
+//#ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
 	int scefd, fd;
@@ -217,9 +217,9 @@ int _open(const char *name, int flags, int mode)
 	}
 	
 }
-#endif
+//#endif
 
-#ifdef F__close
+//#ifdef F__close
 int _close(int fd)
 {
 	int ret = 0;
@@ -255,9 +255,9 @@ int _close(int fd)
 	errno = EBADF;
 	return -1;
 }
-#endif
+//#endif
 
-#ifdef F__read
+//#ifdef F__read
 int _read(int fd, void *buf, size_t size)
 {
 	if (!__PSP_IS_FD_VALID(fd)) {
@@ -292,9 +292,9 @@ int _read(int fd, void *buf, size_t size)
 	return -1;
 
 }
-#endif
+//#endif
 
-#ifdef F__write
+//#ifdef F__write
 int _write(int fd, const void *buf, size_t size)
 {
 	if (!__PSP_IS_FD_VALID(fd)) {
@@ -329,9 +329,9 @@ int _write(int fd, const void *buf, size_t size)
 	errno = EBADF;
 	return -1;
 }
-#endif
+//#endif
 
-#ifdef F__lseek
+//#ifdef F__lseek
 off_t _lseek(int fd, off_t offset, int whence)
 {
 	if (!__PSP_IS_FD_VALID(fd)) {
@@ -357,9 +357,9 @@ off_t _lseek(int fd, off_t offset, int whence)
 	return -1;
 
 }
-#endif
+//#endif
 
-#ifdef F__unlink
+//#ifdef F__unlink
 int _unlink(const char *path)
 {
 	char dest[MAXPATHLEN + 1];
@@ -371,17 +371,17 @@ int _unlink(const char *path)
 
 	return __psp_set_errno(sceIoRemove(dest));
 }
-#endif
+//#endif
 
-#ifdef F__link
+//#ifdef F__link
 int _link(const char *name1, const char *name2)
 {
 	errno = ENOSYS;
 	return -1; /* not supported */
 }
-#endif
+//#endif
 
-#ifdef F_opendir
+//#ifdef F_opendir
 DIR *opendir(const char *filename)
 {
 	char dest[MAXPATHLEN + 1];
@@ -409,9 +409,9 @@ DIR *opendir(const char *filename)
 
 	return dirp;
 }
-#endif
+//#endif
 
-#ifdef F_readdir
+////#ifdef F_readdir
 struct dirent *readdir(DIR *dirp)
 {
 	int ret;
@@ -432,9 +432,9 @@ struct dirent *readdir(DIR *dirp)
 
 	return &dirp->de;
 }
-#endif
+//#endif
 
-#ifdef F_closedir
+//#ifdef F_closedir
 int closedir(DIR *dirp)
 {
 	if (dirp != NULL)
@@ -447,10 +447,10 @@ int closedir(DIR *dirp)
 	errno = EBADF;
 	return -1; 
 }
-#endif
+//#endif
 
 /* Time routines.  These wrap around the routines provided by the kernel. */
-#ifdef F__gettimeofday
+//#ifdef F__gettimeofday
 int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
 	int ret;
@@ -491,33 +491,33 @@ int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 	return 0;
 }
 
-#endif
+//#endif
 
-#if defined(F_clock)
+//#if defined(F_clock)
 clock_t clock(void)
 {
 	return sceKernelLibcClock();
 }
-#endif
+//#endif
 
-#if defined(F_time)
+//#if defined(F_time)
 time_t time(time_t *t)
 {
 	return __psp_set_errno(sceKernelLibcTime(t));
 }
-#endif
+//#endif
 
-#if defined(F_sleep)
+//#if defined(F_sleep)
 unsigned int sleep(unsigned int secs) {
 	while(secs--) {	
 		sceKernelDelayThreadCB(1000000);
 	}
 	return 0;
 }
-#endif
+//#endif
 
 /* PSP-compatible sbrk(). */
-#if defined(F__sbrk) || defined(F_glue__sbrk)
+////#if defined(F__sbrk) || defined(F_glue__sbrk)
 
 #define DEFAULT_PRX_HEAP_SIZE_KB 64
 
@@ -579,10 +579,10 @@ int __psp_free_heap(void)
 
 	return __psp_heap_blockid;
 }
-#endif
+////#endif
 
 /* Other POSIX routines that must be defined. */
-#ifdef F__fstat
+//#ifdef F__fstat
 int _fstat(int fd, struct stat *sbuf)
 {
 	int ret;
@@ -621,9 +621,9 @@ int _fstat(int fd, struct stat *sbuf)
 	errno = EBADF;
 	return -1;
 }
-#endif
+//#endif
 
-#ifdef F_isatty
+//#ifdef F_isatty
 int isatty(int fd)
 {
 	if (!__PSP_IS_FD_VALID(fd)) {
@@ -638,16 +638,16 @@ int isatty(int fd)
 		return 0;
 	}
 }
-#endif
+//#endif
 
-#ifdef F__isatty
+//#ifdef F__isatty
 int _isatty(int fd)
 {
     return isatty(fd);
 }
-#endif
+//#endif
 
-#ifdef F__stat
+//#ifdef F__stat
 static time_t psp_to_epoch_time(ScePspDateTime psp_time)
 {
 	struct tm conv_time;
@@ -689,12 +689,12 @@ int _stat(const char *filename, struct stat *buf)
 	buf->st_size = psp_stat.st_size;
 	return 0;
 }
-#endif
+//#endif
 
 /* from stat.h in ps2sdk, this function may be correct */
 #define FIO_CST_SIZE	0x0004
 
-#ifdef F_truncate
+//#ifdef F_truncate
 int truncate(const char *filename, off_t length)
 {
 	SceIoStat psp_stat;
@@ -713,42 +713,42 @@ int truncate(const char *filename, off_t length)
 	}
 	return __psp_set_errno(sceIoChstat(dest, &psp_stat, FIO_CST_SIZE));
 }
-#endif
+//#endif
 
 /* Unsupported newlib system calls. */
-#ifdef F__fork
+//#ifdef F__fork
 pid_t fork(void)
 {
 	errno = ENOSYS;
 	return (pid_t) -1;
 }
-#endif
+//#endif
 
-#ifdef F__getpid
+//#ifdef F__getpid
 pid_t _getpid(void)
 {
 	errno = ENOSYS;
 	return (pid_t) -1;
 }
-#endif
+//#endif
 
-#ifdef F__kill
+//#ifdef F__kill
 int _kill(int unused, int unused2)
 {
 	errno = ENOSYS;
 	return -1;
 }
-#endif
+//#endif
 
-#ifdef F__wait
+//#ifdef F__wait
 pid_t _wait(int *unused)
 {
 	errno = ENOSYS;
 	return (pid_t) -1;
 }
-#endif
+//#endif
 
-#ifdef F_access
+//#ifdef F_access
 int access(const char *fn, int flags)
 {
 	struct stat s;
@@ -765,9 +765,9 @@ int access(const char *fn, int flags)
 	}
 	return 0;
 }
-#endif
+//#endif
 
-#ifdef F__fcntl
+//#ifdef F__fcntl
 int _fcntl(int fd, int cmd, ...)
 {
 	if (!__PSP_IS_FD_VALID(fd)) {
@@ -827,9 +827,9 @@ int _fcntl(int fd, int cmd, ...)
 	errno = EBADF;
 	return -1;
 }
-#endif /* F__fcntl */
+//#endif /* F__fcntl */
 
-#ifdef F_tzset
+//#ifdef F_tzset
 void tzset(void)
 {
 	static int initialized = 0;
@@ -858,9 +858,9 @@ void tzset(void)
 
 	_tzset_r(_REENT);
 }
-#endif
+//#endif
 
-#ifdef F_mlock
+//#ifdef F_mlock
 static unsigned int lock_count = 0;
 static unsigned int intr_flags = 0;
 
@@ -881,10 +881,10 @@ void __malloc_unlock(struct _reent *ptr)
 		pspEnableInterrupts(intr_flags);
 	}
 }
-#endif
+//#endif
 
 /* Exit. */
-#if defined(F__exit) || defined(F_glue__exit)
+//#if defined(F__exit) || defined(F_glue__exit)
 extern int sce_newlib_nocreate_thread_in_start __attribute__((weak));
 
 extern int __psp_free_heap(void);
@@ -928,9 +928,9 @@ void __psp_libc_init(int argc, char *argv[])
 	__psp_fdman_init();
 }
 
-#endif /* F__exit */
+//#endif /* F__exit */
 
-#ifdef F__rename
+//#ifdef F__rename
 int _rename(const char *old, const char *new)
 {
    char oldname[MAXPATHLEN + 1];
@@ -948,9 +948,9 @@ int _rename(const char *old, const char *new)
 
    return __psp_set_errno(sceIoRename(oldname, newname));
 }
-#endif
+//#endif
 
-#ifdef F_nanosleep
+//#ifdef F_nanosleep
 /* note: we don't use rem as we have no signals */
 int nanosleep(const struct timespec *req, struct timespec *rem)
 {
@@ -966,5 +966,5 @@ int nanosleep(const struct timespec *req, struct timespec *rem)
 
     return 0;
 }
-#endif
+//#endif
 
