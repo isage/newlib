@@ -34,7 +34,7 @@ struct	stat
   gid_t		st_gid;
   dev_t		st_rdev;
   off_t		st_size;
-#if defined(__svr4__) && !defined(__PPC__) && !defined(__sun__)
+#if defined(__psp__) || (defined(__svr4__) && !defined(__PPC__) && !defined(__sun__))
   time_t	st_atime;
   time_t	st_mtime;
   time_t	st_ctime;
@@ -50,7 +50,7 @@ struct	stat
 #endif
 };
 
-#if !(defined(__svr4__) && !defined(__PPC__) && !defined(__sun__))
+#if !(defined(__svr4__) && !defined(__PPC__) && !defined(__sun__)) && !defined(__psp__)
 #define st_atime st_atim.tv_sec
 #define st_ctime st_ctim.tv_sec
 #define st_mtime st_mtim.tv_sec
