@@ -49,7 +49,7 @@ typedef __intptr_t register_t;
 #include <sys/select.h>
 #endif
 
-#if __BSD_VISIBLE
+#if __BSD_VISIBLE && !defined(__psp__)
 #include <machine/endian.h>
 #include <sys/select.h>
 #  define	physadr		physadr_t
