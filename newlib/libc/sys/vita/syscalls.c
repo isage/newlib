@@ -300,6 +300,7 @@ _open_r(struct _reent *reent, const char *file, int flags, int mode)
 	__vita_fdmap[fd]->sce_uid = ret;
 	__vita_fdmap[fd]->type = is_dir ? VITA_DESCRIPTOR_DIRECTORY : VITA_DESCRIPTOR_FILE;
 	__vita_fdmap[fd]->filename = strdup(full_path);
+	__vita_fdmap[fd]->flags = flags;
 
 	free(full_path);
 

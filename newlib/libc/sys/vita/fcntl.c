@@ -70,14 +70,13 @@ int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 	}
 
 	// The only existing flag is FD_CLOEXEC, and it is unsupported,
-	// so F_GETFD always returns zero.
-	if (cmd == F_GETFD)
+	// so F_GETFD/F_SETFD always returns zero.
+	if (cmd == F_GETFD || cmd == F_SETFD)
 	{
 		__vita_fd_drop(fdmap);
 		return 0;
 	}
 
-	// Only net sockets are supported for F_GETFL/F_SETFL
 	if (fdmap->type == VITA_DESCRIPTOR_SOCKET)
 	{
 		if (cmd == F_GETFL)
@@ -114,7 +113,24 @@ int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 		}
 	}
 
+	if (fdmap->type == VITA_DESCRIPTOR_FILE)
+	{
+		if (cmd == F_GETFL)
+		{
+			int flags = fdmap->flags;
+			__vita_fd_drop(fdmap);
+			return flags;
+		}
+
+		if (cmd == F_SETFL)
+		{
+			fdmap->flags = arg;
+			__vita_fd_drop(fdmap);
+			return 0;
+		}
+	}
+
 	__vita_fd_drop(fdmap);
-	errno = ENOTSUP;
+	errno = EBADF;
 	return -1;
 }
