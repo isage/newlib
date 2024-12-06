@@ -26,6 +26,8 @@ DEALINGS IN THE SOFTWARE.
 #include <fcntl.h>
 #include <stdarg.h>
 #include <sys/socket.h>
+#include <stdio.h>
+#include <errno.h>
 
 #include <psp2/net/net.h>
 #include <psp2/types.h>
@@ -33,6 +35,8 @@ DEALINGS IN THE SOFTWARE.
 #include "vitadescriptor.h"
 #include "vitaerror.h"
 #include "vitanet.h"
+
+extern FILE  *__sfp (struct _reent *);
 
 int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 {
@@ -126,6 +130,14 @@ int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 		{
 			fdmap->flags = arg;
 			__vita_fd_drop(fdmap);
+			// update native descriptor flags too
+			register FILE *fp;
+			if ((fp = __sfp (reent)) == 0)
+			{
+				errno = EINVAL;
+				return -1;
+			}
+			fp->_flags = arg;
 			return 0;
 		}
 	}

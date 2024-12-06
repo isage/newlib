@@ -41,6 +41,8 @@ _write_r(struct _reent * reent, int fd, const void *buf, size_t nbytes)
 	{
 		case VITA_DESCRIPTOR_FILE:
 		case VITA_DESCRIPTOR_TTY:
+			if (fdmap->flags & O_APPEND)
+				sceIoLseek(fdmap->sce_uid, 0, SCE_SEEK_END);
 			ret = sceIoWrite(fdmap->sce_uid, buf, nbytes);
 			break;
 		case VITA_DESCRIPTOR_SOCKET:
