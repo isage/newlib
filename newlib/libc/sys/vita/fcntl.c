@@ -37,6 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include "vitanet.h"
 
 extern FILE  *__sfp (struct _reent *);
+#define SETFL_FLAGS (O_NONBLOCK | O_APPEND | O_DIRECT | O_ASYNC | O_SYNC | O_DSYNC)
 
 int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 {
@@ -129,7 +130,10 @@ int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 		if (cmd == F_SETFL)
 		{
 			// File access modes should be ignored
-			arg = arg & (O_NONBLOCK | O_APPEND | O_DIRECT | O_ASYNC | O_SYNC | O_DSYNC);
+			arg = arg & SETFL_FLAGS;
+			// But should be kept as is if they were set by open
+			arg |= (fdmap->flags & ~SETFL_FLAGS);
+
 			fdmap->flags = arg;
 			__vita_fd_drop(fdmap);
 			// update native descriptor flags too
