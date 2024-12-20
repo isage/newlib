@@ -128,6 +128,8 @@ int _fcntl_r(struct _reent *reent, int fd, int cmd, ...)
 
 		if (cmd == F_SETFL)
 		{
+			// File access modes should be ignored
+			arg = arg & (O_NONBLOCK | O_APPEND | O_DIRECT | O_ASYNC | O_SYNC | O_DSYNC);
 			fdmap->flags = arg;
 			__vita_fd_drop(fdmap);
 			// update native descriptor flags too
